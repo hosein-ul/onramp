@@ -1,0 +1,57 @@
+/* Agit — constructivist poster. A flat red field, a cropped black circle, one diagonal band. No gradients, no textures, no cards-on-dark. */
+.ag { --red: #e3101e; --black: #0b0b0b; --paper: #f4f5f5; --grey: #b7bbbb; --ok: #14a35e; background: var(--paper); color: var(--black); font-family: "Inter Tight", system-ui, sans-serif; overflow-x: hidden; }
+.ag * { box-sizing: border-box; }
+.ag-hero { position: relative; background: var(--red); min-height: max(100dvh, 760px); overflow: hidden; color: var(--black); }
+.ag-nav { position: relative; z-index: 6; display: flex; align-items: center; gap: 16px; padding: 20px clamp(16px, 3vw, 40px); }
+.ag-logo { color: var(--black); font-family: "Archivo", sans-serif; font-weight: 900; font-stretch: 125%; font-variation-settings: "wdth" 125; letter-spacing: .02em; font-size: 15px; margin-right: auto; }
+.ag-tag { font-family: "IBM Plex Mono", "DM Mono", monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; border: 2px solid #fff; color: #fff; padding: 5px 10px; white-space: nowrap; }
+.ag-btn { font: inherit; font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 110; font-weight: 800; font-size: 15px; letter-spacing: .02em; text-transform: uppercase; background: var(--black); color: #fff; border: 2px solid var(--black); padding: 14px 22px; cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+.ag-btn:hover { background: #fff; color: var(--black); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--black); }
+.ag-btn.inv { background: #fff; color: var(--black); border-color: #fff; padding: 8px 14px; font-size: 12px; white-space: nowrap; } .ag-btn.inv:hover { background: var(--red); color: #fff; box-shadow: none; transform: none; }
+.ag-btn.ghost { background: transparent; color: var(--black); } .ag-btn:disabled { background: var(--grey); border-color: var(--grey); color: #6a6e6e; cursor: not-allowed; transform: none; box-shadow: none; }
+.ag-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.ag-wedge { position: absolute; left: 0; top: 64px; width: min(34vw, 420px); aspect-ratio: 1; background: var(--paper); clip-path: polygon(0 0, 100% 0, 0 100%); opacity: .96; }
+.ag-num { position: absolute; left: clamp(8px, 1.6vw, 24px); bottom: -0.04em; margin: 0; font-family: "Archivo", sans-serif; font-weight: 900; font-variation-settings: "wdth" 62; font-size: clamp(110px, 19.5vw, 340px); line-height: .8; letter-spacing: -.02em; white-space: nowrap; z-index: 3; font-variant-numeric: tabular-nums; }
+.ag-num-cap { position: absolute; left: clamp(12px, 2vw, 28px); bottom: calc(clamp(110px, 19.5vw, 340px) * 0.8 + 10px); margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; z-index: 3; }
+.ag-dial { position: absolute; right: -9vw; top: -5vw; width: min(54vw, 780px); height: auto; z-index: 3; }
+.ag-dial .disc { fill: var(--black); } .ag-dial .ring { stroke: #fff; stroke-opacity: .25; stroke-width: 2; }
+.ag-dial .tick { stroke: #fff; stroke-width: 5; stroke-linecap: butt; } .ag-dial .tick.off { stroke: #333; } .ag-dial .tick.now { stroke: var(--red); stroke-width: 9; }
+.ag-dial text { fill: #fff; font-family: "Archivo", sans-serif; } .ag-dial .d-k { font-family: "IBM Plex Mono", monospace; font-size: 22px; letter-spacing: .3em; fill: #9a9a9a; } .ag-dial .d-v { font-weight: 900; font-size: 150px; font-variation-settings: "wdth" 62; } .ag-dial .d-u { font-family: "IBM Plex Mono", monospace; font-size: 20px; letter-spacing: .2em; fill: #9a9a9a; text-transform: uppercase; }
+.ag-band { position: absolute; left: -6vw; right: -6vw; top: 41%; background: var(--black); transform: rotate(-5deg); padding: clamp(18px, 2.6vw, 34px) 0 clamp(18px, 2.6vw, 34px) calc(6vw + clamp(16px, 3vw, 48px)); z-index: 2; }
+.ag-band h1 { margin: 0; color: #fff; font-family: "Archivo", sans-serif; font-weight: 900; font-variation-settings: "wdth" 125; text-transform: uppercase; font-size: clamp(30px, 5.4vw, 92px); line-height: .96; letter-spacing: -.015em; max-width: 48vw; }
+.ag-sub { position: absolute; z-index: 4; right: clamp(16px, 3vw, 40px); bottom: clamp(24px, 4vh, 48px); width: min(440px, 34vw); display: grid; gap: 16px; justify-items: start; }
+.ag-sub p { margin: 0; font-size: clamp(14px, 1.2vw, 16px); line-height: 1.45; font-weight: 500; }
+.ag-err { position: absolute; z-index: 6; left: 16px; right: 16px; top: 76px; background: #fff; border: 2px solid var(--black); padding: 8px 12px; margin: 0; font-weight: 600; }
+
+.ag-sys { padding: clamp(32px, 5vw, 64px) clamp(16px, 3vw, 40px); display: grid; gap: clamp(32px, 4vw, 56px); }
+.ag-sys-head { display: flex; justify-content: space-between; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; border-bottom: 3px solid var(--black); padding-bottom: 12px; }
+.ag-row { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 24px; align-items: start; }
+.ag-row h2 { margin: 0; font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 110; font-weight: 800; font-size: 16px; text-transform: uppercase; letter-spacing: .04em; }
+.ag-sw { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.ag-s { min-height: 180px; padding: 14px; display: grid; align-content: space-between; gap: 6px; } .ag-s strong { font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 110; font-weight: 800; text-transform: uppercase; font-size: 14px; } .ag-s code { font-family: "IBM Plex Mono", monospace; font-size: 12px; } .ag-s small { font-size: 12px; line-height: 1.35; opacity: .9; }
+.ag-s:first-child { outline: 0; } .ag-sw .ag-s:nth-child(3) { border: 1px solid var(--black); }
+.ag-type { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.ag-spec .aa { display: block; font-family: "Archivo", sans-serif; font-weight: 900; font-variation-settings: "wdth" 125; font-size: clamp(56px, 7vw, 104px); line-height: .9; } .ag-spec .aa.cond { font-variation-settings: "wdth" 62; font-size: clamp(48px, 6vw, 88px); letter-spacing: -.01em; } .ag-spec .aa.mono { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: clamp(28px, 3.2vw, 44px); letter-spacing: -.02em; padding-top: 12px; }
+.ag-spec p { margin: 10px 0 0; font-size: 13px; line-height: 1.45; color: #333; }
+.ag-comp { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
+.ag-box { grid-column: span 4; border-top: 3px solid var(--black); padding-top: 12px; } .ag-box.wide { grid-column: span 8; }
+.ag-k { margin: 0 0 14px; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; } .ag-mut { font-size: 12px; color: #555; margin: 10px 0 0; }
+.ag-stack { display: grid; gap: 10px; justify-items: start; }
+.ag-steps { display: flex; align-items: flex-end; gap: 6px; height: 100px; } .ag-steps i { width: 36px; background: var(--grey); } .ag-steps i.verified { background: var(--ok); } .ag-steps i.ready { background: var(--black); } 
+.ag-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.ag-tile { position: relative; padding: 14px 14px 16px; min-height: 190px; display: grid; align-content: start; gap: 8px; background: #fff; border: 2px solid var(--black); clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%); }
+.ag-tile .n { font-family: "Archivo", sans-serif; font-weight: 900; font-variation-settings: "wdth" 62; font-size: 64px; line-height: .8; } .ag-tile h3 { margin: 0; font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 105; font-weight: 800; font-size: 16px; text-transform: uppercase; line-height: 1.1; } .ag-tile p { margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; line-height: 1.5; color: #444; }
+.ag-tile em { font-style: normal; font-family: "IBM Plex Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; justify-self: start; padding: 3px 8px; margin-top: auto; border: 2px solid var(--black); }
+.ag-tile.verified em { background: var(--ok); border-color: var(--ok); color: #fff; } .ag-tile.ready { background: var(--red); } .ag-tile.ready p { color: var(--black); } .ag-tile.ready em { background: var(--black); color: #fff; } .ag-tile.locked { background: var(--paper); border-style: dashed; color: #888; } .ag-tile.locked p, .ag-tile.locked h3 { color: #888; }
+.ag-rcpt { border: 2px solid var(--black); background: #fff; } .ag-rcpt .ag-b { background: var(--red); font-family: "Archivo", sans-serif; font-variation-settings: "wdth" 125; font-weight: 900; font-size: 13px; padding: 10px 12px; letter-spacing: .02em; } .ag-rcpt dl { margin: 0; padding: 12px; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-family: "IBM Plex Mono", monospace; font-size: 12px; } .ag-rcpt dt { color: #555; } .ag-rcpt dd { margin: 0; text-align: right; }
+.ag-rules ol { margin: 0; padding-left: 20px; display: grid; gap: 10px; font-size: 15px; line-height: 1.4; max-width: 60ch; }
+.ag-foot { padding: 20px clamp(16px, 3vw, 40px) 32px; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #555; border-top: 3px solid var(--black); margin: 0 clamp(16px, 3vw, 40px); }
+@media (max-width: 900px) {
+  .ag-row { grid-template-columns: 1fr; } .ag-sw { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ag-type { grid-template-columns: 1fr; } .ag-box, .ag-box.wide { grid-column: 1 / -1; } .ag-tiles { grid-template-columns: 1fr; }
+  .ag-hero { min-height: 980px; } .ag-tag { display: none; }
+  .ag-dial { right: -26vw; top: 40px; width: 96vw; } .ag-wedge { width: 40vw; top: 56px; }
+  .ag-band { top: 47%; } .ag-band h1 { font-size: 7.4vw; max-width: none; }
+  .ag-num { font-size: 25vw; bottom: 170px; } .ag-num-cap { bottom: calc(25vw * 0.8 + 180px); }
+  .ag-sub { left: 16px; right: 16px; width: auto; bottom: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .ag-btn { transition: none; } }

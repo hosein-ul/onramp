@@ -7,12 +7,10 @@ export type PreviewState = "verified" | "ready" | "locked";
 export const PREVIEW_STATES: PreviewState[] = ["verified", "verified", "ready", "locked", "locked"];
 export const stops = MISSIONS_V1.missions;
 
-export function grouped(height: bigint | undefined): string {
-  return height === undefined ? "—" : Number(height).toLocaleString("en-US");
-}
-export function ms(n: number | undefined): string {
-  return n === undefined ? "—" : n < 1000 ? `${Math.round(n)} ms` : `${(n / 1000).toFixed(2)} s`;
-}
+export const grouped = (h: bigint | undefined): string => (h === undefined ? "—" : Number(h).toLocaleString("en-US"));
+export const ms = (n: number | undefined): string => (n === undefined ? "—" : n < 1000 ? `${Math.round(n)} ms` : `${(n / 1000).toFixed(2)} s`);
+export const stateLabel = { verified: "Verified", ready: "Your turn", locked: "Locked" } as const;
+
 export interface DirectionProps {
   pulse: Pulse;
   onStart: () => void;
