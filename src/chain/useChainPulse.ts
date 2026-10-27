@@ -16,6 +16,8 @@ export interface Pulse {
   /** Median gap between recent block timestamps, in milliseconds. */
   slotTimeMs?: number;
   ticks: Tick[];
+  /** Recent RPC round-trip times, oldest first. */
+  latencies: number[];
 }
 
 const MAX_TICKS = 56;
@@ -30,12 +32,13 @@ function median(values: number[]): number | undefined {
 
 /** Polls finalized height and pulls each new block. Everything shown comes from the RPC. */
 export function useChainPulse(): Pulse {
-  const [pulse, setPulse] = useState<Pulse>({ status: "connecting", ticks: [] });
+  const [pulse, setPulse] = useState<Pulse>({ status: "connecting", ticks: [], latencies: [] });
 
   useEffect(() => {
     let cancelled = false;
     let lastSlot: bigint | null = null;
     const bySlot = new Map<string, Tick>();
+    const latencies: number[] = [];
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     async function poll() {
@@ -47,6 +50,8 @@ export function useChainPulse(): Pulse {
         const started = performance.now();
         const height = await chain().blocks.getBlockHeight();
         const latencyMs = Math.round(performance.now() - started);
+        latencies.push(latencyMs);
+        if (latencies.length > 48) latencies.shift();
         const head = height.finalized;
 
         const from = lastSlot === null ? head - 23n : lastSlot + 1n;
@@ -82,7 +87,7 @@ export function useChainPulse(): Pulse {
           if (a && b && b.timeMs > a.timeMs) gaps.push(b.timeMs - a.timeMs);
         }
         if (!cancelled) {
-          setPulse({ status: "live", height: head, latencyMs, slotTimeMs: median(gaps), ticks });
+          setPulse({ status: "live", height: head, latencyMs, slotTimeMs: median(gaps), ticks, latencies: [...latencies] });
         }
       } catch (e) {
         if (!cancelled) {
