@@ -94,10 +94,15 @@ if (FUND) {
   await closePanel();
 
   // 4. Token account
+  // The hosted wallet opens a THRUSD token account itself when it creates the wallet. Open the panel only if it is not verified yet.
+  if ((await stateOf(3)) !== "verified") {
+    await openMission(3);
+    const open = page.getByRole("button", { name: "Open token account" });
+    if (await open.isVisible().catch(() => false)) { await open.click(); await approveIfPrompted(8000); }
+    await closePanel();
+  }
+  check("mission 4 verifies the THRUSD token account", await waitFor(async () => (await stateOf(3)) === "verified", 60000, 1000));
   await openMission(3);
-  await page.getByRole("button", { name: "Open token account" }).click();
-  await approveIfPrompted(8000);
-  check("mission 4 verifies the THRUSD token account", await waitFor(async () => (await stateOf(3)) === "verified", 60000, 1000), await panelMsg());
   await shot("05-mission4");
   await closePanel();
 

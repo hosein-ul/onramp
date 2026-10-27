@@ -13,5 +13,5 @@ export default defineConfig({
     port: 5173,
     https: key && cert ? { key: readFileSync(key), cert: readFileSync(cert) } : undefined,
   },
-  build: { target: "es2022" },
+  build: { target: "es2022", chunkSizeWarningLimit: 700, rollupOptions: { output: { manualChunks: { react: ["react", "react-dom"] } } } },
 });

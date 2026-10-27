@@ -1,15 +1,18 @@
 import { MISSIONS_V1 } from "../../missions/v1";
 import { NETWORK } from "../config";
 import type { Pulse } from "../chain/useChainPulse";
-import type { Trail } from "../trail/useTrail";
+import { useTrail } from "../trail/useTrail";
 import { Cluster } from "../ui/Cluster";
 import { MissionKey } from "../ui/MissionKey";
 import { MissionPanel } from "../ui/MissionPanel";
-import { connectWallet, useWallet } from "../wallet/wallet";
+import { connectWallet, initWallet, useWallet } from "../wallet/wallet";
+import { useEffect } from "react";
 
-export function TrailPage({ pulse, trail, openId }: { pulse: Pulse; trail: Trail; openId?: string }) {
+export function TrailPage({ pulse, openId }: { pulse: Pulse; openId?: string }) {
   const w = useWallet();
+  const trail = useTrail(w.address);
   const missions = MISSIONS_V1.missions;
+  useEffect(() => { initWallet(); }, []);
   const open = missions.findIndex((m) => m.id === openId);
   const total = missions.length;
   const anyError = Object.values(trail.statuses).some((s) => s.state === "error");

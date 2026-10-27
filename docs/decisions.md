@@ -44,3 +44,6 @@ Mission 5 sends to a token account the user can change, defaulting to a communit
 ## D14 — Open items
 * The first-transfer target is the network faucet account (tested). Other networks need their own value in `src/config.ts`.
 * Mission 5's success path needs real THRUSD (GitHub or X sign-in on the Thru Developers site). Its failure path is exercised end to end; its success path is covered by unit tests only.
+
+## D15 — Mission 4 reframed: "Find your token account"
+End-to-end testing showed the hosted wallet opens the THRUSD token account itself, two slots after creating the wallet (Multicall, then Token `initialize_account`, same fee payer). A mission that asks the user to open it would ask for something already done. It is now "Find your token account": same chain verification, honest copy. The "Open token account" action remains as a fallback for wallets without one.

@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { BrowserSDK, DepositTarget, ThruNetwork, type DepositDestination } from "@thru/wallet";
+import type { BrowserSDK, DepositDestination } from "@thru/wallet";
 import { chain } from "../chain/client";
 import { NETWORK, SITE } from "../config";
 import { fromBase64, type TransactionIntent } from "./intents";
@@ -18,7 +18,6 @@ export interface SubmitResult {
   executed: boolean | null;
 }
 
-const NETWORK_ENUM: Record<string, ThruNetwork> = { alphanet: ThruNetwork.Alphanet, betanet: ThruNetwork.Betanet };
 
 let sdk: BrowserSDK | null = null;
 let starting: Promise<BrowserSDK> | null = null;
@@ -41,10 +40,13 @@ function start(): Promise<BrowserSDK> {
   starting ??= (async () => {
     set({ ...state, phase: "starting" });
     try {
+      // The wallet SDK is large, so it loads only when the wallet is first needed.
+      const { BrowserSDK, ThruNetwork } = await import("@thru/wallet");
+      const networks = { alphanet: ThruNetwork.Alphanet, betanet: ThruNetwork.Betanet } as const;
       const instance = new BrowserSDK({
         iframeUrl: NETWORK.walletUrl,
         rpcUrl: NETWORK.rpcUrl,
-        network: NETWORK_ENUM[NETWORK.id],
+        network: networks[NETWORK.id],
         theme: "dark",
         autoRestore: true,
         telemetryEnabled: false,
@@ -99,12 +101,14 @@ export async function disconnectWallet(): Promise<void> {
 /** The THRUSD token account the wallet derives for this user, and its mint. Does not create anything. */
 export async function prepareThrusd(): Promise<DepositDestination> {
   const w = await start();
+  const { DepositTarget } = await import("@thru/wallet");
   return w.deposits.prepare(DepositTarget.THRUSD);
 }
 
 /** Creates the THRUSD token account if it does not exist. Safe to repeat. */
 export async function ensureThrusdAccount(): Promise<DepositDestination> {
   const w = await start();
+  const { DepositTarget } = await import("@thru/wallet");
   const destination = await w.deposits.prepare(DepositTarget.THRUSD);
   await w.deposits.ensureAccount({ destination });
   return destination;

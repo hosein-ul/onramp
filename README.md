@@ -11,7 +11,7 @@ A guided trail through [Thru](https://thru.org), the RISC-V Layer-1. Create a pa
 | 1 | Create your wallet | The address is an account owned by the Passkey Manager program with at least one passkey authority. |
 | 2 | Get test funds | The wallet account's native balance is greater than zero. |
 | 3 | Send your first transfer | A transaction from your wallet to the target executed **without error** (`vmError == 0`, `userErrorCode == 0`). |
-| 4 | Open a token account | A Token-program account owned by your wallet exists and its mint is `THRUSD` on chain. |
+| 4 | Find your token account | A Token-program account owned by your wallet exists and its mint is `THRUSD` on chain. The hosted wallet opens this account itself when it creates the wallet; Waypoint verifies it and offers to open it if it is missing. |
 | 5 | Move a token | A transaction moved THRUSD out of your token account and executed without error. |
 
 A transaction that lands on chain but fails is **not** counted. Progress is recomputed from the chain on every visit. There is no server, no database and no login. Receipts carry only pointers (address, signature); the page that opens a receipt link re-reads the chain and shows what the chain says.
