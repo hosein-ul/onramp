@@ -7,6 +7,7 @@ import { Topbar } from "./ui/Topbar";
 import { initWallet } from "./wallet/wallet";
 
 const TrailPage = lazy(() => import("./pages/TrailPage").then((m) => ({ default: m.TrailPage })));
+const LabPage = lazy(() => import("./pages/LabPage").then((m) => ({ default: m.LabPage })));
 const ReceiptPage = lazy(() => import("./pages/ReceiptPage").then((m) => ({ default: m.ReceiptPage })));
 
 const readRoute = () => window.location.hash.replace(/^#\/?/, "");
@@ -32,7 +33,7 @@ export function App() {
       <Topbar pulse={pulse} />
       <main>
         <Suspense fallback={<p className="loading" role="status">Loading…</p>}>
-          {receipt ? <ReceiptPage r={receipt} /> : section === "trail" ? <TrailPage pulse={pulse} openId={id} /> : <Landing pulse={pulse} />}
+          {receipt ? <ReceiptPage r={receipt} /> : section === "trail" ? <TrailPage pulse={pulse} openId={id} /> : section === "lab" ? <LabPage pulse={pulse} section={id} /> : <Landing pulse={pulse} />}
         </Suspense>
       </main>
       <footer className="foot"><span>{SITE.disclaimer}</span><span>Built on the official @thru/* packages · Test network only</span></footer>

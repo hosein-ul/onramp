@@ -116,3 +116,12 @@ h1.h1s { font-size: clamp(40px, 5.5vw, 76px); }
 @media (prefers-reduced-motion: reduce) { .gauge .needle, .btn, .key, .panel { transition: none; animation: none; } .key.ready .lamp { animation: none; } html { scroll-behavior: auto; } }
 
 .loading { color: var(--chrome); font-family: var(--mono); font-size: 13px; padding: 24px 0; }
+
+.diff { padding: clamp(32px, 6vw, 72px) 0 0; border-top: 1px solid var(--line); }
+.diff-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.diff-grid li { border: 1px solid var(--line); border-radius: 18px; padding: 20px; background: linear-gradient(180deg, #17171b, #0f0f12); display: grid; gap: 8px; align-content: start; }
+.diff-grid .n { font-family: var(--lbl); font-weight: 600; font-size: 40px; line-height: .9; color: var(--red); }
+.diff-grid h3 { margin: 0; font-family: var(--lbl); font-weight: 700; font-size: 26px; text-transform: uppercase; line-height: 1.05; }
+.diff-grid p { margin: 0 0 10px; color: #b4b4bd; font-size: 15px; }
+.diff-grid .btn { justify-self: start; }
+@media (max-width: 900px) { .diff-grid { grid-template-columns: 1fr; } }

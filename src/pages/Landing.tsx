@@ -23,6 +23,15 @@ export function Landing({ pulse }: { pulse: Pulse }) {
         {pulse.status === "error" && <p className="banner bad" role="alert">The network did not answer: {pulse.error ?? "unknown error"}. Waypoint keeps retrying. Nothing on this page is simulated.</p>}
       </section>
 
+      <section className="diff" aria-labelledby="diff-h">
+        <div className="sec-head"><h2 id="diff-h">What Thru is made of</h2><p>Three things you can read straight off the network, live. No recordings.</p></div>
+        <ul className="diff-grid">
+          <li><span className="n">01</span><h3>Prices that live on chain</h3><p>A program keeps real exchange prices written into accounts. Any other program can read them.</p><a className="btn ghost" href="#/lab/oracle">See the live feeds</a></li>
+          <li><span className="n">02</span><h3>One signature, many updates</h3><p>A real transaction names every account it writes and declares its budget up front.</p><a className="btn ghost" href="#/lab/tx">Take one apart</a></li>
+          <li><span className="n">03</span><h3>Programs are RISC-V code</h3><p>A contract is standard RISC-V instructions in an account. Read a real one, instruction by instruction.</p><a className="btn ghost" href="#/lab/code">Read the code</a></li>
+        </ul>
+      </section>
+
       <section className="route" aria-labelledby="route-h">
         <div className="sec-head"><h2 id="route-h">The trail</h2><p>Five stops. Each one lists the exact chain reads that decide it.</p></div>
         <ol className="stops">

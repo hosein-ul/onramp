@@ -11,6 +11,7 @@ export function Topbar({ pulse }: { pulse: Pulse }) {
       <a className="logo" href="#/" aria-label="Waypoint home">WAYPOINT</a>
       <nav className="topnav" aria-label="Main">
         <a href="#/trail">Trail</a>
+        <a href="#/lab">Lab</a>
       </nav>
       <span className="chip" title={`Chain ID ${NETWORK.chainId}`}><i className={`dot ${pulse.status}`} />{NETWORK.name}<em>{net}</em></span>
       {w.phase === "connected" && w.address ? (
