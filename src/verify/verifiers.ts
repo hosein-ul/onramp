@@ -109,8 +109,8 @@ function matchWalletTransfer(tx: ChainTx, from: string): { to: string; amount: b
 export interface TokenAccountExpectation {
   /** The token account address the wallet prepared for the user. */
   tokenAccount: string;
-  /** Mint the wallet reported. The chain must agree it is THRUSD. */
-  mint: string;
+  /** Mint the wallet reported. When omitted, the mint stored in the token account is used. Either way the chain must say it is THRUSD. */
+  mint?: string;
   ticker?: string;
 }
 
@@ -133,9 +133,9 @@ export async function verifyTokenAccount(reader: ChainReader, wallet: string, ex
   const parsed = readTokenAccount(account);
   if (!parsed) return pending("The token account data could not be read.");
   if (parsed.owner !== wallet) return pending("That token account belongs to a different wallet.");
-  if (parsed.mint !== exp.mint) return pending("That token account holds a different token than the wallet reported.");
+  if (exp.mint && parsed.mint !== exp.mint) return pending("That token account holds a different token than the wallet reported.");
 
-  const mintAccount = await reader.getAccount(exp.mint);
+  const mintAccount = await reader.getAccount(parsed.mint);
   if (!mintAccount || mintAccount.owner !== PROGRAMS.token) return pending("The token mint was not found on the network.");
   let onChainTicker = "";
   try {
@@ -182,4 +182,11 @@ export async function verifyTokenTransfer(reader: ChainReader, tokenAccount: str
   }
   const failed = txs.some((tx) => !isOk(tx) && tx.program === PROGRAMS.passkeyManager && tx.readOnly.includes(PROGRAMS.token));
   return pending(failed ? "A token transfer was submitted but the network rejected it. You may need THRUSD in the account first." : "No confirmed token transfer from your token account yet.");
+}
+
+/** The raw balance of a token account, or null when it does not exist or is not a token account. */
+export async function readTokenBalance(reader: ChainReader, tokenAccount: string): Promise<bigint | null> {
+  const account = await reader.getAccount(tokenAccount);
+  if (!account || account.owner !== PROGRAMS.token) return null;
+  return readTokenAccount(account)?.amount ?? null;
 }

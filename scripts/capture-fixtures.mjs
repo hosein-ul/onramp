@@ -2,7 +2,7 @@
 // Usage: NODE_EXTRA_CA_CERTS=... node scripts/capture-fixtures.mjs
 import { writeFileSync, mkdirSync } from "node:fs";
 import { createThruClient, AccountView } from "@thru/sdk";
-import { encodeAddress, encodeSignature } from "@thru/sdk/helpers";
+import { encodeAddress } from "@thru/sdk/helpers";
 
 const thru = createThruClient({ baseUrl: "https://rpc.alphanet.thru.org" });
 const hex = (u) => Buffer.from(u ?? []).toString("hex");

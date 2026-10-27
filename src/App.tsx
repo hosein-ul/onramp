@@ -1,39 +1,39 @@
 import { useEffect, useState } from "react";
 import { useChainPulse } from "./chain/useChainPulse";
-import { Agit } from "./directions/Agit";
-import { Overprint } from "./directions/Overprint";
-import { Redline } from "./directions/Redline";
+import { SITE } from "./config";
+import { Landing } from "./pages/Landing";
+import { ReceiptPage } from "./pages/ReceiptPage";
+import { TrailPage } from "./pages/TrailPage";
+import { parseReceiptRoute } from "./receipts/receipt";
+import { useTrail } from "./trail/useTrail";
+import { Topbar } from "./ui/Topbar";
+import { initWallet, useWallet } from "./wallet/wallet";
 
-const DIRECTIONS = { agit: Agit, overprint: Overprint, redline: Redline } as const;
-type Key = keyof typeof DIRECTIONS;
-
-function useHashRoute(): [string, (r: string) => void] {
-  const read = () => window.location.hash.replace(/^#\/?/, "");
-  const [route, setRoute] = useState(read);
-  useEffect(() => {
-    const on = () => setRoute(read());
-    window.addEventListener("hashchange", on);
-    return () => window.removeEventListener("hashchange", on);
-  }, []);
-  return [route, (r) => (window.location.hash = r ? `/${r}` : "")];
-}
+const readRoute = () => window.location.hash.replace(/^#\/?/, "");
 
 export function App() {
   const pulse = useChainPulse();
-  const [route, go] = useHashRoute();
-  const asked = new URLSearchParams(window.location.search).get("d") as Key | null;
-  const key: Key = asked && asked in DIRECTIONS ? asked : "agit";
+  const wallet = useWallet();
+  const trail = useTrail(wallet.address);
+  const [route, setRoute] = useState(readRoute);
 
-  if (route === "trail") return <main style={{ padding: 32 }}>The trail is being built.</main>;
-  const Dir = DIRECTIONS[key];
+  useEffect(() => {
+    const on = () => { setRoute(readRoute()); window.scrollTo({ top: 0 }); };
+    window.addEventListener("hashchange", on);
+    initWallet();
+    return () => window.removeEventListener("hashchange", on);
+  }, []);
+
+  const receipt = parseReceiptRoute(route);
+  const [section, id] = route.split("?")[0]?.split("/") ?? [""];
+
   return (
-    <>
-      <Dir pulse={pulse} onStart={() => go("trail")} />
-      <nav aria-label="Design direction" style={{ position: "fixed", right: 12, bottom: 12, display: "flex", gap: 4, zIndex: 99, font: "12px monospace" }}>
-        {(Object.keys(DIRECTIONS) as Key[]).map((k) => (
-          <a key={k} href={`?d=${k}`} style={{ padding: "6px 10px", background: k === key ? "#000" : "#fff", color: k === key ? "#fff" : "#000", border: "1px solid #000", textDecoration: "none" }}>{k}</a>
-        ))}
-      </nav>
-    </>
+    <div className="app">
+      <Topbar pulse={pulse} />
+      <main>
+        {receipt ? <ReceiptPage r={receipt} /> : section === "trail" ? <TrailPage pulse={pulse} trail={trail} openId={id} /> : <Landing pulse={pulse} />}
+      </main>
+      <footer className="foot"><span>{SITE.disclaimer}</span><span>Built on the official @thru/* packages · Test network only</span></footer>
+    </div>
   );
 }
