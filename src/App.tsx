@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { useChainPulse } from "./chain/useChainPulse";
-import { Chart } from "./directions/Chart";
-import { Index } from "./directions/Index";
-import { Stamp } from "./directions/Stamp";
-import { Strip } from "./directions/Strip";
-import { Landing } from "./ui/Landing";
+import { Monument } from "./directions/Monument";
+import { Print } from "./directions/Print";
+import { Unit } from "./directions/Unit";
 
-const DIRECTIONS = { index: Index, strip: Strip, chart: Chart, stamp: Stamp, instrument: Landing } as const;
+const DIRECTIONS = { unit: Unit, monument: Monument, print: Print } as const;
 type Key = keyof typeof DIRECTIONS;
 
 function useHashRoute(): [string, (r: string) => void] {
@@ -24,7 +22,7 @@ export function App() {
   const pulse = useChainPulse();
   const [route, go] = useHashRoute();
   const asked = new URLSearchParams(window.location.search).get("d") as Key | null;
-  const key: Key = asked && asked in DIRECTIONS ? asked : "index";
+  const key: Key = asked && asked in DIRECTIONS ? asked : "unit";
 
   if (route === "trail") return <main style={{ padding: 32 }}>The trail is being built.</main>;
   const Dir = DIRECTIONS[key];
