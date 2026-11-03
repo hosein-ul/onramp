@@ -45,3 +45,8 @@ export function parseReceiptRoute(route: string): ReceiptRef | null {
   if (!address || !m[1]) return null;
   return { missionId: m[1], address, signature: q.get("s") ?? undefined, tokenAccount: q.get("t") ?? undefined };
 }
+
+/** The seed a receipt's stamp is drawn from: the transaction signature, or the address and mission for state reads. */
+export function stampSeed(r: Pick<Receipt, "signature" | "address" | "missionId">): string {
+  return r.signature ?? `${r.address}:${r.missionId}`;
+}

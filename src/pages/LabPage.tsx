@@ -19,7 +19,7 @@ export function LabPage({ pulse, section }: { pulse: Pulse; section?: string }) 
     <div className="lab">
       <header className="lab-head">
         <div>
-          <p className="eyebrow">The lab · {NETWORK.name}</p>
+          <p className="eyebrow">Lab · {NETWORK.name}</p>
           <h1 className="h1s">What Thru is made of.</h1>
           <p className="lede">Three things you can read straight off the network. Every number and every instruction on this page is live data from {NETWORK.name}. Nothing is a recording.</p>
         </div>

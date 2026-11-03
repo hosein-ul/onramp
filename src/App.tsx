@@ -27,13 +27,14 @@ export function App() {
 
   const receipt = parseReceiptRoute(route);
   const [section, id] = route.split("?")[0]?.split("/") ?? [""];
+  const key = receipt ? "receipt" : section === "trail" || section === "lab" ? section : "";
 
   return (
     <div className="app">
-      <Topbar pulse={pulse} />
+      <Topbar pulse={pulse} section={key} />
       <main>
         <Suspense fallback={<p className="loading" role="status">Loading…</p>}>
-          {receipt ? <ReceiptPage r={receipt} /> : section === "trail" ? <TrailPage pulse={pulse} openId={id} /> : section === "lab" ? <LabPage pulse={pulse} section={id} /> : <Landing pulse={pulse} />}
+          {receipt ? <ReceiptPage r={receipt} /> : key === "trail" ? <TrailPage pulse={pulse} openId={id} /> : key === "lab" ? <LabPage pulse={pulse} section={id} /> : <Landing pulse={pulse} />}
         </Suspense>
       </main>
       <footer className="foot"><span>{SITE.disclaimer}</span><span>Built on the official @thru/* packages · Test network only</span></footer>

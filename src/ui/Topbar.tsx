@@ -3,15 +3,15 @@ import type { Pulse } from "../chain/useChainPulse";
 import { connectWallet, disconnectWallet, initWallet, useWallet } from "../wallet/wallet";
 import { short } from "./format";
 
-export function Topbar({ pulse }: { pulse: Pulse }) {
+export function Topbar({ pulse, section }: { pulse: Pulse; section: string }) {
   const w = useWallet();
   const net = pulse.status === "live" ? "live" : pulse.status === "error" ? "offline" : "connecting";
   return (
     <header className="topbar">
-      <a className="logo" href="#/" aria-label="Waypoint home">WAYPOINT</a>
+      <a className="logo" href="#/" aria-label="Waypoint home"><span className="mk" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span>Waypoint</a>
       <nav className="topnav" aria-label="Main">
-        <a href="#/trail">Trail</a>
-        <a href="#/lab">Lab</a>
+        <a href="#/trail" className={section === "trail" ? "on" : ""}>Trail</a>
+        <a href="#/lab" className={section === "lab" ? "on" : ""}>Lab</a>
       </nav>
       <span className="chip" title={`Chain ID ${NETWORK.chainId}`}><i className={`dot ${pulse.status}`} />{NETWORK.name}<em>{net}</em></span>
       {w.phase === "connected" && w.address ? (

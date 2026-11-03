@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Mission } from "../../missions/types";
 import { NETWORK, TRAIL } from "../config";
 import { makeReceipt } from "../receipts/receipt";
@@ -9,7 +9,7 @@ import { networkReader } from "../verify/reader";
 import { isValidAddress, readTokenBalance } from "../verify/verifiers";
 import { PROGRAMS } from "../verify/programs";
 import { nativeTransferIntent, tokenTransferIntent } from "../wallet/intents";
-import { connectWallet, ensureThrusdAccount, signAndSubmit, useWallet, walletErrorMessage, type SubmitStage } from "../wallet/wallet";
+import { connectWallet, ensureThrusdAccount, openWalletFunding, signAndSubmit, useWallet, walletErrorMessage, type SubmitStage } from "../wallet/wallet";
 import { formatUnits, short } from "./format";
 
 const reader = networkReader();
@@ -42,6 +42,21 @@ export function MissionPanel({ mission, index, status, trail, onClose }: Props) 
   const [sink, setSink] = useState<string>(TRAIL.tokenSink ?? "");
   const [tokenBalance, setTokenBalance] = useState<bigint | null | undefined>(undefined);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+
+  // The panel grows out of the row that was clicked, and is a centred sheet on every screen size.
+  useLayoutEffect(() => {
+    const el = panelRef.current;
+    const row = document.querySelector<HTMLElement>(`[data-mission="${mission.id}"]`);
+    if (!el || !row || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const from = row.getBoundingClientRect(), to = el.getBoundingClientRect();
+    if (!to.width || !to.height) return;
+    const dx = from.left + from.width / 2 - (to.left + to.width / 2), dy = from.top + from.height / 2 - (to.top + to.height / 2);
+    el.animate(
+      [{ transform: `translate(${dx}px, ${dy}px) scale(${Math.min(1, from.width / to.width)}, ${Math.min(1, from.height / to.height)})`, opacity: 0.2 }, { transform: "none", opacity: 1 }],
+      { duration: 380, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+    );
+  }, [mission.id]);
   const address = wallet.address;
   const locked = status.state === "locked";
   const verified = status.state === "verified" && status.evidence;
@@ -132,7 +147,7 @@ export function MissionPanel({ mission, index, status, trail, onClose }: Props) 
 
   return (
     <div className="panel-wrap" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <aside className="panel" role="dialog" aria-modal="true" aria-labelledby="mp-title">
+      <aside className="panel" ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="mp-title">
         <header>
           <span className="mp-n">{String(index + 1).padStart(2, "0")}</span>
           <span className={`pill ${status.state}`}>{status.state === "verified" ? "Verified" : status.state === "ready" ? "Your turn" : status.state === "locked" ? "Locked" : status.state === "error" ? "Can't read network" : "Checking"}</span>
@@ -161,7 +176,12 @@ export function MissionPanel({ mission, index, status, trail, onClose }: Props) 
         {mission.id === "token-transfer" && (
           <div className="mp-token">
             <p className="mp-note">Your THRUSD balance: <b>{tokenBalance === undefined ? "reading…" : tokenBalance === null ? "no account yet" : `${formatUnits(tokenBalance, 6)} THRUSD`}</b></p>
-            <a className="btn ghost" href={faucet} target="_blank" rel="noreferrer noopener">Open the THRUSD faucet</a>
+            <button type="button" className="btn" disabled={!!busy || !address} onClick={() => void guard(async () => {
+              setBusy("Waiting for the wallet…");
+              const r = await openWalletFunding();
+              setMessage({ tone: r === "cancelled" ? "info" : "ok", text: r === "cancelled" ? "Funding was closed. Nothing changed." : "Funding sent. Your balance below updates when the chain shows it." });
+            })}>Get THRUSD in your wallet</button>
+            <a className="btn ghost" href={faucet} target="_blank" rel="noreferrer noopener">Or use the web faucet</a>
             <p className="mp-note small">The faucet needs a GitHub or X sign-in and allows 5 requests per minute. Opening it does not add funds; the balance above changes only when the chain says so.</p>
             <label className="field">Send {formatUnits(TRAIL.tokenAmount, 6)} THRUSD to this token account
               <input id="sink" value={sink} onChange={(e) => setSink(e.target.value.trim())} spellCheck={false} autoComplete="off" placeholder="ta…" />
