@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waypoint — B · Pocket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cobalt:#2438F5; --cobalt-2:#1B2BD0; --cobalt-3:#111D9E; --cobalt-lt:#5B6BFF;
+  --sun:#FFD43B; --sun-2:#FFB800; --sun-ink:#2A2000;
+  --ground:#F1F3FF; --white:#FFFFFF; --lilac:#E3E7FF; --ink:#0E1245; --ink-2:#434A86; --ink-3:#7A81B8;
+  --ok:#0E9F6E; --ok-wash:#D9F6EA;
+  --line:rgb(14 18 69 / .1);
+  --f:"Gabarito",system-ui,sans-serif; --mono:"Geist Mono",ui-monospace,monospace;
+  --spring:cubic-bezier(.34,1.7,.5,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:500 17px/1.5 var(--f);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px;border-radius:12px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+
+/* hero field */
+.hero{position:relative;background:
+  radial-gradient(60% 70% at 78% 38%,rgb(91 107 255 / .9),transparent 70%),
+  radial-gradient(40% 50% at 8% 100%,rgb(17 29 158 / .8),transparent 70%),
+  var(--cobalt);
+  color:#fff;border-radius:0 0 72px 72px;overflow:hidden;min-height:820px;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;background-image:radial-gradient(rgb(255 255 255 / .18) 1.2px,transparent 1.4px);background-size:28px 28px;mask-image:radial-gradient(70% 70% at 70% 45%,#000,transparent 80%)}
+nav{display:flex;align-items:center;justify-content:space-between;height:88px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:900;font-size:24px;letter-spacing:-.02em}
+.mark{width:36px;height:36px;border-radius:12px;background:var(--sun);display:grid;place-items:center;box-shadow:inset 0 -3px 0 rgb(0 0 0 / .15),0 6px 14px -4px rgb(0 0 0 / .4)}
+.links{display:flex;align-items:center;gap:6px}
+.links a{padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:700;font-size:15px;color:rgb(255 255 255 / .85);transition:background .15s}
+.links a:hover{background:rgb(255 255 255 / .14)}
+.net{margin-left:8px;display:inline-flex;gap:8px;align-items:center;background:rgb(255 255 255 / .14);padding:9px 14px;border-radius:999px;font:500 12px var(--mono);backdrop-filter:blur(8px);border:1px solid rgb(255 255 255 / .2)}
+.net i{width:8px;height:8px;border-radius:50%;background:#5CF2B5}
+.hero-grid{display:grid;grid-template-columns:6.5fr 5.5fr;gap:24px;align-items:center;padding:56px 0 130px}
+h1{font:900 clamp(56px,7.6vw,104px)/.9 var(--f);letter-spacing:-.04em;margin:0 0 26px}
+h1 span{display:inline-block;background:var(--sun);color:var(--sun-ink);padding:0 .14em .06em;border-radius:.22em;transform:rotate(-1.5deg);box-shadow:0 .08em 0 var(--sun-2)}
+.lede{font-size:21px;line-height:1.45;color:rgb(255 255 255 / .86);max-width:500px;margin:0 0 36px;font-weight:500}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.btn{--b:var(--sun);--b2:var(--sun-2);--c:var(--sun-ink);display:inline-flex;align-items:center;gap:10px;height:58px;padding:0 30px;border-radius:999px;border:0;font:800 18px var(--f);color:var(--c);background:var(--b);text-decoration:none;cursor:pointer;box-shadow:0 5px 0 var(--b2),0 14px 22px -8px rgb(0 0 0 / .4);transition:transform .18s var(--spring),box-shadow .18s}
+.btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 7px 0 var(--b2),0 18px 26px -8px rgb(0 0 0 / .4)}
+.btn:active{transform:translateY(4px) scale(.98);box-shadow:0 1px 0 var(--b2),0 4px 8px -4px rgb(0 0 0 / .4)}
+.btn.glass{--b:rgb(255 255 255 / .16);--b2:rgb(255 255 255 / .1);--c:#fff;box-shadow:0 5px 0 rgb(0 0 0 / .18),inset 0 0 0 1.5px rgb(255 255 255 / .35)}
+.btn.sm{height:46px;padding:0 22px;font-size:16px}
+.btn.blue{--b:var(--cobalt);--b2:var(--cobalt-3);--c:#fff}
+.btn.line{--b:var(--lilac);--b2:#C6CCF5;--c:var(--ink)}
+
+/* hero object: passkey card + badges */
+.stage{position:relative;height:560px}
+.card{position:absolute;left:50%;top:50%;width:330px;height:430px;margin:-215px 0 0 -165px;border-radius:44px;background:
+  radial-gradient(120% 60% at 30% 0%,rgb(255 255 255 / .55),transparent 55%),
+  linear-gradient(160deg,#fff 0%,#E8ECFF 55%,#C9D1FF 100%);
+  box-shadow:inset 0 2px 0 #fff,inset 0 -10px 24px rgb(36 56 245 / .18),0 50px 70px -30px rgb(10 14 90 / .75),0 18px 28px -14px rgb(10 14 90 / .5);
+  transform:rotate(6deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;color:var(--ink);animation:bob 6s ease-in-out infinite}
+.card small{font:700 14px var(--f);color:var(--ink-2);letter-spacing:.02em}
+.card b{font:900 30px/1 var(--f);letter-spacing:-.02em}
+.fp{width:150px;height:150px;border-radius:50%;background:var(--cobalt);display:grid;place-items:center;box-shadow:inset 0 4px 0 rgb(255 255 255 / .35),inset 0 -8px 16px rgb(0 0 0 / .25),0 14px 24px -8px rgb(36 56 245 / .6)}
+.ok{display:inline-flex;align-items:center;gap:8px;background:var(--ok-wash);color:#0A7A55;font:800 14px var(--f);padding:8px 16px;border-radius:999px}
+.coin{position:absolute;width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font:900 40px var(--f);color:var(--sun-ink);background:radial-gradient(circle at 32% 26%,#FFF3B0,var(--sun) 45%,var(--sun-2));box-shadow:inset 0 -6px 10px rgb(150 90 0 / .35),inset 0 3px 0 rgb(255 255 255 / .7),0 20px 28px -10px rgb(10 14 90 / .6);animation:bob 5s ease-in-out infinite}
+.coin.dim{background:radial-gradient(circle at 32% 26%,#fff,#DCE1FF 55%,#B7C0FF);color:var(--cobalt-3);box-shadow:inset 0 -6px 10px rgb(36 56 245 / .25),inset 0 3px 0 #fff,0 20px 28px -10px rgb(10 14 90 / .6)}
+.coin.done{background:radial-gradient(circle at 32% 26%,#7BFFC9,#18C48A 50%,#0E9F6E);color:#fff;box-shadow:inset 0 -6px 10px rgb(0 70 40 / .4),inset 0 3px 0 rgb(255 255 255 / .6),0 20px 28px -10px rgb(10 14 90 / .6)}
+.coin:nth-of-type(2){left:2%;top:10%;animation-delay:-1s}.coin:nth-of-type(3){right:0;top:4%;animation-delay:-2.2s}.coin:nth-of-type(4){left:-2%;bottom:6%;animation-delay:-3s}.coin:nth-of-type(5){right:4%;bottom:12%;width:78px;height:78px;animation-delay:-.4s}.coin:nth-of-type(6){left:44%;bottom:-30px;width:66px;height:66px;animation-delay:-1.7s;font-size:32px}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -14px}}
+
+/* sections */
+section{padding:112px 0 0}
+.head{max-width:720px;margin-bottom:48px}
+h2{font:900 clamp(40px,5vw,68px)/.95 var(--f);letter-spacing:-.035em;margin:0 0 16px}
+.head p{font-size:20px;color:var(--ink-2);margin:0}
+.chip{display:inline-block;font:800 13px var(--f);letter-spacing:.04em;text-transform:uppercase;background:var(--lilac);color:var(--cobalt);padding:7px 14px;border-radius:999px;margin-bottom:18px}
+
+.missions{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.m{position:relative;grid-column:span 3;background:#fff;border-radius:36px;padding:28px;box-shadow:0 1px 0 #fff inset,0 24px 40px -26px rgb(14 18 69 / .3),0 0 0 1px var(--line);display:flex;flex-direction:column;gap:14px;min-height:260px;transition:transform .25s var(--spring)}
+.m:hover{transform:translateY(-6px) rotate(-.6deg)}
+.m .coin{position:static;width:64px;height:64px;font-size:28px;animation:none;flex:none}
+.m h3{font:900 25px/1.1 var(--f);letter-spacing:-.025em;margin:6px 0 0}
+.m p{margin:0;color:var(--ink-2);font-size:16px}
+.m .st{margin-top:auto}
+.m.active{grid-column:span 6;background:var(--cobalt);color:#fff;box-shadow:0 30px 50px -26px rgb(36 56 245 / .8);flex-direction:row;gap:30px;align-items:stretch}
+.m.active .l{flex:1;display:flex;flex-direction:column;gap:14px}
+.m.active p{color:rgb(255 255 255 / .85)}
+.m.active ol{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.m.active li{display:flex;gap:12px;align-items:flex-start;font-size:16px;color:rgb(255 255 255 / .92)}
+.m.active li i{flex:none;width:24px;height:24px;border-radius:50%;background:rgb(255 255 255 / .2);font:800 13px var(--f);font-style:normal;display:grid;place-items:center}
+.m.active .r{flex:none;display:flex;flex-direction:column;justify-content:flex-end;gap:12px}
+.m.lock{background:transparent;box-shadow:inset 0 0 0 2px var(--line);opacity:.85}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font:800 13px var(--f)}
+.tag.ok{background:var(--ok-wash);color:#0A7A55}.tag.lk{background:var(--lilac);color:var(--ink-3)}.tag.you{background:var(--sun);color:var(--sun-ink)}
+.reads{font:500 12px var(--mono);color:rgb(255 255 255 / .7)}
+
+.lab{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.t{border-radius:40px;padding:34px;min-height:400px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}
+.t h3{font:900 30px/1 var(--f);letter-spacing:-.03em;margin:0 0 10px}
+.t p{margin:0;font-size:17px;max-width:340px}
+.t1{grid-column:span 5;background:var(--sun);color:var(--sun-ink)}
+.t2{grid-column:span 7;background:#fff;box-shadow:0 0 0 1px var(--line)}
+.t3{grid-column:span 12;background:var(--ink);color:#fff;flex-direction:row;gap:40px;min-height:300px;align-items:center}
+.t3 p{color:rgb(255 255 255 / .75)}
+.pr{display:grid;gap:10px;margin-top:26px}
+.pr div{display:flex;align-items:center;gap:12px;background:rgb(255 255 255 / .55);padding:12px 16px;border-radius:20px;font-weight:800}
+.pr em{margin-left:auto;font:600 15px var(--mono);font-style:normal}
+.pr svg{width:60px;height:22px}
+.bytes{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.bytes b{padding:12px 16px;border-radius:18px;font:800 14px var(--f);color:var(--ink)}
+.t3 pre{margin:0;flex:1;background:rgb(255 255 255 / .07);border-radius:28px;padding:24px 28px;font:500 14.5px/1.85 var(--mono);color:#D5D9FF;box-shadow:inset 0 0 0 1px rgb(255 255 255 / .1)}
+.t3 pre u{text-decoration:none;color:var(--sun)}
+.sample{font:500 11px var(--mono);opacity:.65}
+
+.trust{margin-top:112px;background:#fff;border-radius:72px;padding:90px 0;box-shadow:0 0 0 1px var(--line)}
+.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.trust p{font-size:19px;color:var(--ink-2);max-width:480px}
+.trust ul{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:14px}
+.trust li{display:flex;gap:14px;align-items:center;font-weight:700}
+.trust li b{flex:none;width:32px;height:32px;border-radius:50%;background:var(--ok-wash);color:var(--ok);display:grid;place-items:center}
+.sheet{background:var(--ground);border-radius:40px;padding:34px;box-shadow:inset 0 0 0 1px var(--line),0 40px 60px -40px rgb(14 18 69 / .35)}
+.sheet .top{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.sheet .top .coin{position:static;width:60px;height:60px;font-size:26px;animation:none}
+.sheet h4{margin:0;font:900 24px/1.1 var(--f);letter-spacing:-.02em}
+.sheet dl{margin:0;background:#fff;border-radius:26px;padding:6px 22px}
+.sheet dl div{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--line);font-weight:700}
+.sheet dl div:last-child{border:0}
+.sheet dt{color:var(--ink-3)}.sheet dd{margin:0;font:500 14px var(--mono);text-align:right}
+footer{padding:48px 0 56px;color:var(--ink-3);font-weight:600;font-size:15px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){.card,.coin{animation:none}.btn,.m{transition:none}}
+@media (max-width:900px){
+  .wrap{padding:0 20px}.links a:not(.net){display:none}.hero{border-radius:0 0 40px 40px}
+  .hero-grid{grid-template-columns:1fr;padding:24px 0 80px}.stage{height:420px;order:2}.card{width:250px;height:330px;margin:-165px 0 0 -125px;border-radius:36px;gap:16px}.fp{width:110px;height:110px}.fp svg{width:76px}
+  .coin{width:64px!important;height:64px!important;font-size:26px!important}
+  .missions>*{grid-column:span 6!important}.m.active{flex-direction:column}
+  .lab>*{grid-column:span 12}.t3{flex-direction:column;align-items:stretch}
+  .trust{border-radius:40px;padding:60px 0}.trust-grid{grid-template-columns:1fr;gap:36px}
+}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <nav><a class="brand" href="#"><span class="mark"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v16M2 10h16" stroke="#2A2000" stroke-width="3.4" stroke-linecap="round"/><circle cx="10" cy="10" r="3" fill="#2A2000"/></svg></span>Waypoint</a>
+    <div class="links"><a href="#trail">Trail</a><a href="#lab">Lab</a><a href="#proof">Receipts</a><span class="net"><i></i>Alphanet live</span></div></nav>
+  <div class="hero-grid">
+    <div>
+      <h1>Learn Thru <span>by using it.</span></h1>
+      <p class="lede">Five short missions on a live network. Do the thing, and the chain itself confirms it. Every result is read from on-chain data.</p>
+      <div class="cta"><a class="btn" href="#trail">Start the trail</a><a class="btn glass" href="#lab">Open the Lab</a></div>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="card"><div class="fp"><svg id="fp" width="96" height="96" viewBox="-48 -48 96 96"></svg></div><div style="text-align:center"><small>Your first wallet</small><br><b>Passkey</b></div><span class="ok">✓ No seed phrase</span></div>
+      <div class="coin done">1</div><div class="coin done">2</div><div class="coin">3</div><div class="coin dim">4</div><div class="coin dim">5</div>
+    </div>
+  </div>
+</div></header>
+
+<section id="trail"><div class="wrap">
+  <div class="head"><span class="chip">The trail</span><h2>Five missions. One chain.</h2><p>Each one lists the exact chain reads that decide it. Progress is recomputed from the network every time you visit.</p></div>
+  <div class="missions">
+    <article class="m"><span class="coin done">1</span><h3>Create your wallet</h3><p>Make a passkey wallet. No seed phrase and no browser extension.</p><span class="tag ok st" style="align-self:flex-start">✓ Verified</span></article>
+    <article class="m"><span class="coin done">2</span><h3>Get test funds</h3><p>Receive native THRU on the test network.</p><span class="tag ok st" style="align-self:flex-start">✓ Verified</span></article>
+        <article class="m active"><div class="l"><span class="coin">3</span><h3 style="font-size:34px">Send your first transfer</h3><p>Send a small amount of THRU to another account. You approve it with your passkey.</p>
+      <ol><li><i>1</i>Press Send transfer. The wallet shows what you are about to approve.</li><li><i>2</i>Approve with your passkey.</li><li><i>3</i>Press Verify. Waypoint looks for your transaction on the network.</li></ol></div>
+      <div class="r"><span class="tag you" style="align-self:flex-start">● You are here</span><button class="btn">Send transfer</button><button class="btn glass" id="verify">Verify</button><span class="reads">reads · ListTransactionsForAccount</span></div></article>
+    <article class="m lock"><span class="coin dim">4</span><h3>Find your token account</h3><p>Look up the THRUSD account your wallet already opened for you.</p><span class="tag lk st" style="align-self:flex-start">Locked · finish 3</span></article>
+    <article class="m lock"><span class="coin dim">5</span><h3>Move a token</h3><p>Move a little THRUSD to another token account.</p><span class="tag lk st" style="align-self:flex-start">Locked</span></article>
+  </div>
+</div></section>
+
+<section id="lab"><div class="wrap">
+  <div class="head"><span class="chip">The Lab</span><h2>See what Thru is made of.</h2><p>Live prices from the oracle, a transaction taken apart, and a program shown as the RISC-V instructions it really is.</p></div>
+  <div class="lab">
+    <article class="t t1"><div><h3>Oracle price board</h3><p>Prices written on chain, read live.</p>
+      <div class="pr" id="pr"></div></div><span class="sample">Sample values for this mock.</span></article>
+    <article class="t t2"><div><h3>Transaction anatomy</h3><p>Every field of a transaction, laid end to end and explained.</p></div>
+      <div class="bytes" id="bytes"></div><span class="sample" style="margin-top:14px">Tap a field to learn what it does.</span></article>
+    <article class="t t3"><div style="flex:0 0 340px"><h3>Program reader</h3><p>Open a deployed program and read it as RISC-V instructions, address by address.</p><a class="btn sm" style="margin-top:22px" href="#lab">Open the reader</a></div>
+      <pre><span style="opacity:.5">0x1000</span>  <u>addi</u>  sp, sp, -16
+<span style="opacity:.5">0x1004</span>  <u>sd</u>    ra, 8(sp)
+<span style="opacity:.5">0x1008</span>  <u>sd</u>    s0, 0(sp)
+<span style="opacity:.5">0x100c</span>  <u>addi</u>  s0, sp, 16
+<span style="opacity:.5">0x1010</span>  <u>mv</u>    a5, a0
+<span style="opacity:.5">0x1014</span>  <u>beqz</u>  a5, 0x1044</pre></article>
+  </div>
+</div></section>
+
+<section class="trust" id="proof"><div class="wrap trust-grid">
+  <div><span class="chip">Nothing to take on trust</span><h2>No login. No server. Just the chain.</h2>
+    <p>Waypoint has no database. A receipt carries only pointers; the page that opens it reads the chain again and shows what the chain says.</p>
+    <ul><li><b>✓</b>A transaction that lands but fails is never counted.</li><li><b>✓</b>Progress is recomputed on every visit.</li><li><b>✓</b>Test funds have no value; network rules may change.</li></ul></div>
+  <div class="sheet"><div class="top"><span class="coin done">3</span><div><h4>Send your first transfer</h4><span class="tag ok" style="margin-top:8px">✓ Verified on chain</span></div></div>
+    <dl><div><dt>Result</dt><dd>executed without error</dd></div><div><dt>vmError</dt><dd>0</dd></div><div><dt>userErrorCode</dt><dd>0</dd></div><div><dt>Signature</dt><dd>ts9Qk…f2Lm</dd></div></dl>
+    <p class="sample" style="margin:14px 0 0">An illustration with sample values.</p></div>
+</div></section>
+<footer><div class="wrap"><span>Waypoint — unofficial community project. Not affiliated with Unto Labs or Thru.</span><span>Test network only</span></div></footer>
+
+<script>
+const NS="http://www.w3.org/2000/svg";
+(function(){ /* fingerprint from computed arcs */
+  const s=document.getElementById('fp');
+  for(let i=1;i<=7;i++){const r=i*6.2;const p=document.createElementNS(NS,'circle');
+    p.setAttribute('r',r);p.setAttribute('fill','none');p.setAttribute('stroke','#fff');p.setAttribute('stroke-width',3.2);p.setAttribute('stroke-linecap','round');
+    const C=2*Math.PI*r;p.setAttribute('stroke-dasharray',`${C*(.52+((i*37)%30)/100)} ${C*.1} ${C*.16} ${C*.1}`);p.setAttribute('transform',`rotate(${-80+i*24})`);s.appendChild(p)}
+})();
+const feeds=[['THRU / USD','0.4182',[5,6,5,7,8,7,9,10],'#0E9F6E'],['BTC / USD','67,420',[9,8,9,8,7,8,7,7],'#D9411E'],['ETH / USD','3,214',[4,5,5,6,5,7,7,8],'#0E9F6E']];
+document.getElementById('pr').innerHTML=feeds.map(([n,p,s,c])=>`<div>${n}<svg viewBox="0 0 60 22" style="margin-left:auto"><polyline fill="none" stroke="${c}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" points="${s.map((v,i)=>`${i*60/7},${22-v*2}`).join(' ')}"/></svg><em>${p}</em></div>`).join('');
+const fields=[['version','#E3E7FF'],['signature','#FFD43B'],['fee payer','#D9F6EA'],['nonce','#FFD9E6'],['accounts','#E3E7FF'],['instruction data','#FFD43B'],['program','#D9F6EA']];
+const bx=document.getElementById('bytes');bx.innerHTML=fields.map(([n,c])=>`<b style="background:${c}">${n}</b>`).join('');
+const verify=document.getElementById('verify');verify.onclick=()=>{verify.textContent='✓ Verified';verify.style.setProperty('--b','#18C48A');verify.style.setProperty('--b2','#0A7A55')};
+</script>
+</body>
+</html>

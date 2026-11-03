@@ -1,0 +1,158 @@
+<!doctype html>
+<!--
+  Direction board. Copy to <project>/.design/directions/index.html and edit the DIRECTIONS array.
+  Each direction is its own self-contained HTML file in the same folder.
+  The board is deliberately plain so it does not compete with the directions.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waypoint Directions</title>
+<style>
+  :root { --bg: #16171a; --panel: #1f2125; --line: #33363c; --text: #eceef1; --dim: #9aa0aa; --hi: #ffffff; }
+  * { box-sizing: border-box; } [hidden] { display: none !important; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.45 ui-sans-serif, "Segoe UI", Helvetica, Arial, sans-serif; }
+  header { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); z-index: 2; flex-wrap: wrap; }
+  header h1 { font-size: 14px; font-weight: 600; margin: 0 8px 0 0; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg button { all: unset; cursor: pointer; padding: 6px 12px; color: var(--dim); }
+  .seg button[aria-pressed="true"] { background: var(--panel); color: var(--hi); }
+  .seg button:focus-visible { outline: 2px solid var(--hi); outline-offset: -2px; }
+  main { display: grid; gap: 16px; padding: 16px; }
+  main[data-view="grid"] { grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
+  main[data-view="one"] { grid-template-columns: 1fr; }
+  article { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+  article[hidden] { display: none; }
+  .meta { padding: 12px 14px; display: grid; gap: 4px; border-bottom: 1px solid var(--line); }
+  .meta .row { display: flex; align-items: baseline; gap: 10px; justify-content: space-between; }
+  .meta h2 { margin: 0; font-size: 15px; }
+  .meta p { margin: 0; color: var(--dim); }
+  .meta a { color: var(--text); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .tags span { border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; font-size: 12px; color: var(--dim); }
+  .frame { position: relative; background: #000; }
+  .frame iframe { border: 0; display: block; transform-origin: 0 0; background: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Design directions</h1>
+  <div class="seg" role="group" aria-label="Layout">
+    <button data-view="grid" aria-pressed="true">Side by side</button>
+    <button data-view="one" aria-pressed="false">One at a time</button>
+  </div>
+  <div class="seg" role="group" aria-label="Viewport">
+    <button data-w="1440" aria-pressed="true">Desktop 1440</button>
+    <button data-w="390" aria-pressed="false">Mobile 390</button>
+  </div>
+  <div class="seg" id="picker" role="group" aria-label="Direction" hidden></div>
+</header>
+<main data-view="grid" id="board"></main>
+<script>
+// EDIT THIS
+const PROJECT = 'Waypoint';
+const DIRECTIONS = [
+  {
+    "file": "a-survey.html",
+    "name": "A \u2014 Survey",
+    "idea": "Thru is a landscape and Waypoint is its field guide: the five missions are waypoints on a contour map.",
+    "best": "Best at: friendly orientation; you see the whole route at once.",
+    "risk": "Risk: lightest on technical credibility.",
+    "tags": [
+      "light cool",
+      "map / topography",
+      "grotesque",
+      "orange signal"
+    ]
+  },
+  {
+    "file": "b-pocket.html",
+    "name": "B \u2014 Pocket",
+    "idea": "Your first wallet is something you can hold: glossy passkey card and mission coins on a cobalt field.",
+    "best": "Best at: approachability and fun for newcomers. The brave one.",
+    "risk": "Risk: may feel too consumer for developers.",
+    "tags": [
+      "cobalt field",
+      "3D-ish objects",
+      "rounded geometric",
+      "squash and spring"
+    ]
+  },
+  {
+    "file": "c-cyanotype.html",
+    "name": "C \u2014 Cyanotype",
+    "idea": "The chain drawn as a machine: the trail as a wiring schematic, missions as a parts schedule.",
+    "best": "Best at: technical credibility and showing the mechanism.",
+    "risk": "Risk: dense; needs care for first-time users.",
+    "tags": [
+      "prussian blue",
+      "schematic",
+      "condensed + mono",
+      "line draw"
+    ]
+  },
+  {
+    "file": "d-obsidian.html",
+    "name": "D \u2014 Obsidian",
+    "idea": "One object under glass: five stacked copper-edged layers, one per mission, that lift when you point at them.",
+    "best": "Best at: premium flagship feel and a memorable hero.",
+    "risk": "Risk: dark and heavy; layers must stay readable on phones.",
+    "tags": [
+      "warm black + copper",
+      "isometric layers",
+      "extended sans",
+      "weighty"
+    ]
+  },
+  {
+    "file": "e-stamp-index.html",
+    "name": "E \u2014 Stamp Index",
+    "idea": "Proof you collect: a numbered index where every verified mission earns a stamp drawn from its signature.",
+    "best": "Best at: clarity, speed and a distinctive reward. The quiet one.",
+    "risk": "Risk: restrained; relies on the stamp art and type.",
+    "tags": [
+      "grey-white",
+      "dithered stamps",
+      "neo-grotesque",
+      "stamp press"
+    ]
+  }
+];
+// END EDIT
+document.getElementById('title').textContent = PROJECT + ' — design directions';
+const board = document.getElementById('board'), picker = document.getElementById('picker');
+let width = 1440, view = 'grid', current = 0;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+DIRECTIONS.forEach((d, i) => {
+  const a = document.createElement('article');
+  a.innerHTML = `<div class="meta"><div class="row"><h2>${esc(d.name)}</h2><a href="${esc(d.file)}" target="_blank" rel="noopener">Open full page</a></div>
+    <p>${esc(d.idea)}</p><p>${esc(d.best)} ${esc(d.risk)}</p>
+    <div class="tags">${d.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div></div>
+    <div class="frame"><iframe src="${esc(d.file)}" title="${esc(d.name)}" loading="lazy"></iframe></div>`;
+  board.appendChild(a);
+  const b = document.createElement('button'); b.textContent = d.name.split(' ')[0]; b.dataset.i = i; b.setAttribute('aria-pressed', i === 0);
+  picker.appendChild(b);
+});
+function layout() {
+  board.dataset.view = view; picker.hidden = view !== 'one';
+  [...board.children].forEach((a, i) => {
+    a.hidden = view === 'one' && i !== current;
+    const frame = a.querySelector('.frame'), f = a.querySelector('iframe');
+    const avail = frame.clientWidth || a.clientWidth, scale = Math.min(1, avail / width);
+    const h = width < 600 ? 844 : 900;
+    f.style.width = width + 'px'; f.style.height = (view === 'one' ? Math.max(h, (innerHeight - 170) / scale) : h) + 'px';
+    f.style.transform = `scale(${scale})`;
+    frame.style.height = parseFloat(f.style.height) * scale + 'px';
+    f.style.marginLeft = width < 600 && scale === 1 ? Math.max(0, (avail - width) / 2) + 'px' : '0';
+  });
+}
+document.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', () => { if (b.tagName !== 'BUTTON') return; view = b.dataset.view; press(b); layout(); }));
+document.querySelectorAll('[data-w]').forEach((b) => b.addEventListener('click', () => { width = +b.dataset.w; press(b); layout(); }));
+picker.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; current = +b.dataset.i; press(b); layout(); });
+function press(b) { [...b.parentElement.children].forEach((x) => x.setAttribute('aria-pressed', x === b)); }
+addEventListener('resize', layout); requestAnimationFrame(layout);
+</script>
+</body>
+</html>
