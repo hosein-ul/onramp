@@ -1,0 +1,82 @@
+import type { MissionSet } from "./types";
+
+export const MISSIONS_V1: MissionSet = {
+  version: 1,
+  missions: [
+    {
+      id: "wallet",
+      title: "Create your wallet",
+      goal: "Make a passkey wallet. No seed phrase and no browser extension.",
+      gloss: "A passkey is the fingerprint, face or device PIN you already use to unlock your phone or laptop.",
+      steps: [
+        { text: "Press Create wallet. The official Thru wallet opens." },
+        { text: "Choose Create account and name your passkey." },
+        { text: "Approve with your fingerprint, face or device PIN, then press Connect." },
+      ],
+      action: { kind: "wallet-connect", label: "Create wallet" },
+      verifier: "wallet",
+      reads: "GetAccount · owner is the Passkey Manager program",
+      requires: [],
+    },
+    {
+      id: "funds",
+      title: "Get test funds",
+      goal: "Receive native THRU on the test network.",
+      gloss: "Test funds have no real value. They let your wallet do things on the network.",
+      steps: [
+        { text: "Install the Thru command line tool.", code: "npm i -g thru" },
+        { text: "Create a throwaway key and its on-chain account.", code: "thru keys generate default\nthru account create default" },
+        { text: "Ask the faucet to send THRU to your wallet address.", code: "thru faucet withdraw native {address} 1000" },
+      ],
+      action: { kind: "external", label: "Copy my address" },
+      verifier: "native-balance",
+      reads: "GetAccount · balance is greater than zero",
+      requires: ["wallet"],
+    },
+    {
+      id: "transfer",
+      title: "Send your first transfer",
+      goal: "Send a small amount of THRU to another account.",
+      gloss: "You approve the transfer with your passkey. The wallet builds and signs the transaction for you.",
+      steps: [
+        { text: "Press Send transfer. The wallet shows what you are about to approve." },
+        { text: "Approve with your passkey." },
+        { text: "Press Verify. Waypoint looks for your transaction on the network." },
+      ],
+      action: { kind: "wallet-transfer", label: "Send transfer" },
+      verifier: "native-transfer",
+      reads: "ListTransactionsForAccount, GetTransaction · executed without error",
+      requires: ["funds"],
+    },
+    {
+      id: "token-account",
+      title: "Find your token account",
+      goal: "Look up the THRUSD account your wallet already opened for you.",
+      gloss: "A token account is your own pocket for one kind of token. The Thru wallet opens a THRUSD one for you when it creates your wallet.",
+      steps: [
+        { text: "Press Verify. Waypoint reads your token account from the network." },
+        { text: "If the network does not show one yet, press Open token account and approve if the wallet asks." },
+        { text: "Check the receipt: the holder is your wallet and the token is THRUSD, as recorded on chain." },
+      ],
+      action: { kind: "wallet-token-account", label: "Open token account" },
+      verifier: "token-account",
+      reads: "GetAccount · owned by the Token program, holder is you, token is THRUSD",
+      requires: ["wallet"],
+    },
+    {
+      id: "token-transfer",
+      title: "Move a token",
+      goal: "Send a small amount of THRUSD to another token account.",
+      gloss: "THRUSD comes from the Thru Developers faucet, which needs a GitHub or X sign-in and your token account address.",
+      steps: [
+        { text: "Request test THRUSD for your token account on the Developers faucet." },
+        { text: "Press Send THRUSD and approve with your passkey." },
+        { text: "Press Verify. Waypoint finds the token transfer on the network." },
+      ],
+      action: { kind: "wallet-token-transfer", label: "Send THRUSD" },
+      verifier: "token-transfer",
+      reads: "ListTransactionsForAccount, GetTransaction · token transfer from your account",
+      requires: ["token-account"],
+    },
+  ],
+};
