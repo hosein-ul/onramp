@@ -48,6 +48,7 @@ function start(): Promise<BrowserSDK> {
         rpcUrl: NETWORK.rpcUrl,
         network: networks[NETWORK.id],
         theme: "dark",
+        developerMode: true, // offers the wallet's own test faucet in Add funds (THRUSD)
         autoRestore: true,
         telemetryEnabled: false,
         metadata: { appId: window.location.origin, appName: SITE.name },
@@ -153,4 +154,13 @@ const subscribe = (l: () => void) => {
 
 export function useWallet(): WalletState {
   return useSyncExternalStore(subscribe, () => state);
+}
+
+/** Opens the wallet's funding sheet for THRUSD. In developer mode it offers a test faucet that needs no GitHub login. The user picks the rail; Waypoint only reads the balance afterwards. */
+export async function openWalletFunding(): Promise<"completed" | "cancelled" | "pending"> {
+  const w = await start();
+  const { DepositTarget } = await import("@thru/wallet");
+  const destination = await w.deposits.prepare(DepositTarget.THRUSD);
+  const res = await w.deposits.open({ destination });
+  return res.status;
 }
